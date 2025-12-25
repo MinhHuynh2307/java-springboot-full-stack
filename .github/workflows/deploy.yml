@@ -49,6 +49,7 @@ jobs:
             cd ~
             echo "Before sed:"
             grep "image:" docker-compose.yml
+            echo "Running: sed -i \"s|    image: $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:.*|    image: $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$BUILD_NUMBER|\" docker-compose.yml"
             sed -i "s|    image: $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:.*|    image: $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$BUILD_NUMBER|" docker-compose.yml
             echo "After sed:"
             grep "image:" docker-compose.yml
