@@ -44,12 +44,17 @@ jobs:
           ssh-private-key: ${{ env.EC2_SSH_PRIVATE_KEY }}
 
       - name: SSH To EC2 and Deploy
+        env:
+          DOCKER_USERNAME: ${{ env.DOCKER_USERNAME }}
+          DOCKER_IMAGE_NAME: ${{ env.DOCKER_IMAGE_NAME }}
+          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
+          DOCKER_COMPOSE_APP_SERVICE_NAME: ${{ env.DOCKER_COMPOSE_APP_SERVICE_NAME }}
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@$EC2_PUBLIC_IP_ADDRESS << EOF
+          ssh -o StrictHostKeyChecking=no ec2-user@$EC2_PUBLIC_IP_ADDRESS bash -s << EOF
             cd ~
             echo "Before sed:"
             grep "image:" docker-compose.yml
-            sed -i 's|    image: '"$DOCKER_USERNAME"'/'"$DOCKER_IMAGE_NAME"':.*|    image: '"$DOCKER_USERNAME"'/'"$DOCKER_IMAGE_NAME"':'"$BUILD_NUMBER"'|' docker-compose.yml
+            sed -i 's|    image: $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:.*|    image: $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:$BUILD_NUMBER|' docker-compose.yml
             echo "After sed:"
             grep "image:" docker-compose.yml
             docker-compose pull          
