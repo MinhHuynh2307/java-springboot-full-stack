@@ -12,5 +12,4 @@ public class PingPongController {
     public String pingPong() {
         return "pong";
     }
-
 }
